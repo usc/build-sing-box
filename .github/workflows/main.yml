@@ -15,6 +15,9 @@ jobs:
   check-release:
     name: Check Sing-Box Release
     runs-on: ubuntu-latest
+    outputs:
+      latest_release: ${{ steps.get_release.outputs.latest_release }}
+      new_release: ${{ steps.check_release.outputs.new_release }}
     steps:
       - name: Get latest release from sing-box
         id: get_release
@@ -30,7 +33,6 @@ jobs:
           if [ "$current_release" != "$latest_release" ]; then
             echo "New release detected: $latest_release"
             echo "new_release=true" >> $GITHUB_OUTPUT
-            echo "latest_release=$latest_release" >> $GITHUB_OUTPUT
             echo $latest_release > .current_release
           else
             echo "No new release"
@@ -114,7 +116,7 @@ jobs:
     steps:
       - name: Set variables
         run: |
-          VERSION=${{ env.latest_release }}
+          VERSION=${{ needs.check-release.outputs.latest_release }}
           echo "RELEASE_NAME=Released on $VERSION" >> $GITHUB_ENV
           echo "TAG_NAME=$VERSION" >> $GITHUB_ENV
       - name: Checkout
