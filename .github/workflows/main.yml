@@ -45,6 +45,9 @@ jobs:
     needs: check-release
     if: needs.check-release.outputs.new_release == 'true'
     steps:
+      - name: Debug output
+        run: |
+          echo "Latest release: ${{ needs.check-release.outputs.latest_release }}"
       - name: Cancel previous
         uses: styfle/cancel-workflow-action@0.7.0
         with:
@@ -90,6 +93,7 @@ jobs:
       - name: Run Test
         run: |
           go test -v ./...
+
   cross:
     strategy:
       matrix:
@@ -114,6 +118,9 @@ jobs:
       CGO_ENABLED: 0
       TAGS: with_clash_api,with_quic
     steps:
+      - name: Debug output
+        run: |
+          echo "Latest release: ${{ needs.check-release.outputs.latest_release }}"
       - name: Set variables
         run: |
           VERSION=${{ needs.check-release.outputs.latest_release }}
