@@ -45,7 +45,8 @@ jobs:
     needs: check-release
     if: needs.check-release.outputs.new_release == 'true'
     steps:
-      - env:
+      - name: Environment variables
+        env:
           latest_release: ${{needs.check-release.outputs.latest_release}}
           new_release: ${{needs.check-release.outputs.new_release}}
         run: echo "$latest_release $new_release"
