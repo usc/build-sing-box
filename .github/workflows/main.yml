@@ -101,6 +101,8 @@ jobs:
           go test -v ./...
 
   cross:
+    needs: check-release
+    if: needs.check-release.outputs.new_release == 'true'  
     strategy:
       matrix:
         include:
